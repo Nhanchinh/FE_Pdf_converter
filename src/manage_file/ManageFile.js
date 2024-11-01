@@ -61,7 +61,7 @@ function ManageFile() {
                     <div className='search-typing-location'>
                         <input
                             type='text'
-                            placeholder='Nhập nội dung bạn muốn tìm...'
+                            placeholder='Nhập tên file muốn tìm...'
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />

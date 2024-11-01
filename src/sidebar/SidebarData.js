@@ -9,7 +9,7 @@ export const SidebarData = [
         link: '/home'
     },
     {
-        title: 'Tìm kiếm',
+        title: 'Tìm kiếm nội dung',
         icon: icons.search,
         link: '/search'
     },

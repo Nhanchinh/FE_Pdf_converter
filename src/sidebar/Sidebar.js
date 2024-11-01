@@ -6,6 +6,8 @@ import { Link, useLocation } from 'react-router-dom'; // Import Link từ react-
 function Sidebar() {
     const location = useLocation();
     const [activeIndex, setActiveIndex] = useState(-1);
+    const [isHaveNotify, setIsHaveNotify] = useState(true)
+
 
 
 
@@ -22,7 +24,12 @@ function Sidebar() {
                                 <div className="sidebar-icon">
                                     <img src={val.icon} alt={val.title} />
                                 </div>
-                                <div className="sidebar-title">{val.title}</div>
+                                <div className="sidebar-title">
+                                    {val.title}
+                                    {val.title === "Cập nhật file" && isHaveNotify && (
+                                        <span className="notify-dot"></span>
+                                    )}
+                                </div>
                             </Link>
                         </li>
                     );
@@ -34,38 +41,3 @@ function Sidebar() {
 
 export default Sidebar;
 
-
-
-
-
-
-
-
-
-
-
-
-// import React from "react";
-// import './sidebar.scss'
-// import { SidebarData } from './SidebarData.js'
-// function Sidebar() {
-//     return (
-//         <div className="sidebar">
-//             <ul className="sidebar-list">
-//                 {SidebarData.map((val, key) => {
-//                     return <li className="list-row" key={key}
-//                         onClick={() => { window.location.pathname = val.link }} >
-//                         <div className="sidebar-icon">
-//                             <img src={val.icon} alt={val.title} />
-//                         </div>
-//                         <div className="sidebar-title">{val.title}</div>
-//                     </li>
-
-//                 })}
-//             </ul>
-//         </div>
-//     )
-
-// }
-
-// export default Sidebar

@@ -48,9 +48,14 @@
             align-items: center;
             justify-content: center;
 
+            .sidebar-link {
+                transition: background-color 0.2s ease;
+                /* Thời gian và kiểu chuyển tiếp */
+            }
 
             .sidebar-link.active {
                 background-color: rgb(214, 214, 214);
+
                 /* Màu cho mục được chọn */
             }
 
@@ -62,4 +67,14 @@
 
         }
     }
+}
+
+.notify-dot {
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 50px;
+    /* Khoảng cách giữa tiêu đề và chấm đỏ */
 }
