@@ -1,38 +1,16 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './manageFile.scss';
 import searchIcon from '../assets/Vector.png';
 import fileIcon from '../assets/device-fill.png';
 import downloadIcon from '../assets/download-white.png';
 import deleteIcon from '../assets/delete-bin-5-white.png';
 
-function ManageFile() {
-    const [fileManage, setFileManage] = useState([
-        { title: 'Home' },
-        { title: 'Tìm kiếm' },
-        { title: 'Cập nhật file' },
-        { title: 'Quản lý file' },
-        { title: 'Quản lý tài khoản' },
-    ]);
+function ManageFile({ fileManage: initFile }) {
+    const [fileManage, setFileManage] = useState(initFile);
     const [searchTerm, setSearchTerm] = useState('');
 
-
-    // useEffect(() => {
-    //     // Hàm giả lập lấy dữ liệu từ server
-    //     const fetchData = async () => {
-    //         try {
-    //             const response = await fetch('URL_TO_YOUR_SERVER'); // Thay thế bằng URL của server của bạn
-    //             const data = await response.json();
-    //             setFileManage(data); // Cập nhật dữ liệu vào fileManage
-    //         } catch (error) {
-    //             console.error('Lỗi khi lấy dữ liệu từ server:', error);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, []); // Chạy chỉ một lần khi component được mount
-
-
+    // Sử dụng useEffect để cập nhật fileManage khi fileManages thay đổi
+    console.log(fileManage)
 
     // Hàm tải xuống file
     const handleDownload = (fileName) => {
@@ -47,8 +25,9 @@ function ManageFile() {
     };
 
     // Hàm tìm kiếm
-    const filteredFiles = fileManage.filter(file =>
-        file.title.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredFiles = fileManage.filter((val) =>
+        (val.title && val.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (val.infomation && val.infomation.toLowerCase().includes(searchTerm.toLowerCase())) // Sửa 'information' thành 'infomation'
     );
 
     return (

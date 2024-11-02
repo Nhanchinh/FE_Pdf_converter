@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './search.scss';
 import searchIcon from '../assets/Vector.png';
 import fileIcon from '../assets/device-fill.png';
+import downloadIcon from '../assets/download-white.png';
+import deleteIcon from '../assets/delete-bin-5-white.png';
 
-function Search() {
+function Search({ convertedFiles }) {
     const [file, setFile] = useState([
         { title: 'Home', infomation: 'this is home', fileType: '' },
         { title: 'Tìm kiếm', infomation: 'tìm kiếm mọi lúc', fileType: '' },
@@ -13,21 +15,26 @@ function Search() {
     ]); // lưu trữ danh sách file từ server
     const [searchTerm, setSearchTerm] = useState(''); // lưu từ khóa tìm kiếm
 
+    // Sử dụng useEffect để cập nhật file khi convertedFiles thay đổi
     useEffect(() => {
-        // Giả sử hàm fetchFile() sẽ lấy dữ liệu từ server
-        const fetchFile = async () => {
-            const response = await fetch('/api/files');// sau sẽ thay thành api của server
-            const data = await response.json();
-            setFile(data); // lưu dữ liệu file từ server
-        };
+        setFile(convertedFiles);
+    }, [convertedFiles]);
 
-        fetchFile();
-    }, []);
+    // Hàm tải xuống file
+    const handleDownload = (fileName) => {
+        console.log(`Tải xuống file: ${fileName}`);
+    };
+
+    // Hàm xóa file
+    const handleDelete = (fileName) => {
+        setFile((prevFiles) => prevFiles.filter(file => file.title !== fileName));
+        console.log(`Đã xóa file: ${fileName}`);
+    };
 
     // Lọc file theo từ khóa
     const filteredFiles = file.filter((val) =>
-        val.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        val.infomation.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
+        (val.title && val.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (val.infomation && val.infomation.toLowerCase().includes(searchTerm.toLowerCase())) // Sửa 'information' thành 'infomation'
     );
 
     return (
@@ -55,6 +62,12 @@ function Search() {
                                 <img src={fileIcon} alt='img file' />
                             </div>
                             <div className='file-title'>{val.title}</div>
+                            <div className='file-action'>
+                                <div className='download-action' onClick={() => handleDownload(val.title)}>
+                                    <img src={downloadIcon} alt='download' />
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -64,7 +77,6 @@ function Search() {
 }
 
 export default Search;
-
 
 
 

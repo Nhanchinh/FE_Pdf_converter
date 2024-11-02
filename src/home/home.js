@@ -27,10 +27,18 @@ function Home({ onFileConvert }) { // Thêm props onFileConvert
     const handleConvert = () => {
         if (selectedFile && selectedFormat) {
             // Logic chuyển đổi file
+            // const convertedFile = {
+            //     name: `${selectedFile.name.split('.')[0]}.${selectedFormat}`,
+            //     type: selectedFormat,
+            // };
+
             const convertedFile = {
-                name: `${selectedFile.name.split('.')[0]}.${selectedFormat}`,
-                type: selectedFormat,
+                title: `${selectedFile.name.split('.')[0]}.${selectedFormat}`, // Tên file
+                information: 'Thông tin về file', // Bạn có thể thay đổi thông tin này tùy ý
+                fileType: selectedFormat, // Định dạng file
             };
+
+
             // Gọi hàm onFileConvert để truyền file đã chuyển đổi đến component cha
             onFileConvert(convertedFile);
         }

@@ -10,17 +10,13 @@ import ManageFile from './manage_file/ManageFile';
 import ManageAccount from './manage_account/ManageAccount';
 
 function App() {
-
-
-  const [convertedFiles, setConvertedFiles] = useState([]);
+  const [convertedFiles, setConvertedFiles] = useState([]); // Trạng thái lưu file đã chuyển đổi
+  const [fileManage, setFileManage] = useState([]); // Trạng thái lưu danh sách file quản lý
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Mặc định chưa đăng nhập
 
   const handleFileConvert = (file) => {
-    setConvertedFiles([...convertedFiles, file]);
+    setConvertedFiles([...convertedFiles, file]); // Cập nhật danh sách file đã chuyển đổi
   };
-
-
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Mặc định chưa đăng nhập
 
   const handleLogin = () => {
     setIsAuthenticated(true); // Cập nhật trạng thái khi đăng nhập
@@ -30,6 +26,10 @@ function App() {
   const handleLogout = () => {
     setIsAuthenticated(false); // Cập nhật trạng thái khi đăng xuất
     localStorage.removeItem('isLoggedIn'); // Xóa thông tin trạng thái đăng nhập
+  };
+
+  const updateFiles = (newFiles) => {
+    setFileManage(newFiles); // Cập nhật danh sách file quản lý
   };
 
   useEffect(() => {
@@ -47,10 +47,10 @@ function App() {
         <div style={{ flex: 1, padding: '20px' }}>
           <Routes>
             <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
-            <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
-            <Route path="/search" element={isAuthenticated ? <Search /> : <Navigate to="/login" />} />
-            <Route path="/update-file" element={isAuthenticated ? <UpdateFile /> : <Navigate to="/login" />} />
-            <Route path="/manage-file" element={isAuthenticated ? <ManageFile /> : <Navigate to="/login" />} />
+            <Route path="/home" element={isAuthenticated ? <Home onFileConvert={handleFileConvert} /> : <Navigate to="/login" />} />
+            <Route path="/search" element={isAuthenticated ? <Search convertedFiles={convertedFiles} /> : <Navigate to="/login" />} />
+            <Route path="/update-file" element={isAuthenticated ? <UpdateFile updateFiles={updateFiles} fileManage={fileManage} /> : <Navigate to="/login" />} />
+            <Route path="/manage-file" element={isAuthenticated ? <ManageFile fileManage={fileManage} /> : <Navigate to="/login" />} />
             <Route path="/manage-account" element={isAuthenticated ? <ManageAccount /> : <Navigate to="/login" />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
@@ -61,7 +61,6 @@ function App() {
 }
 
 export default App;
-
 
 
 
