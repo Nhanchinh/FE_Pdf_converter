@@ -17,3 +17,14 @@ button {
 #root>div>div>div>div>div.col-sm-2.d-none.d-sm-block.px-0.mt-5.d-flex.align-items-center {
     margin-top: 10rem !important;
 }
+
+.btn-check:focus-visible+.btn-info,
+.btn-check:focus+.btn-info,
+.btn-info {
+    background-color: var(--primary-color) !important;
+}
+
+#root>div:nth-child(1)>div>div>div.col-sm-2.d-none.d-sm-block.px-0.mt-5.d-flex.align-items-center {
+    display: flex !important;
+
+}

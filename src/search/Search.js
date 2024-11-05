@@ -3,29 +3,24 @@ import './search.scss';
 import searchIcon from '../assets/Vector.png';
 import fileIcon from '../assets/device-fill.png';
 import downloadIcon from '../assets/download-white.png';
-import deleteIcon from '../assets/delete-bin-5-white.png';
 
-function Search({ convertedFiles }) {
-    const [file, setFile] = useState([
-        { title: 'Home', infomation: 'this is home', fileType: '' },
-        { title: 'Tìm kiếm', infomation: 'tìm kiếm mọi lúc', fileType: '' },
-        { title: 'Cập nhật file', infomation: 'trang cá nhân', fileType: '' },
-        { title: 'Quản lý file', infomation: 'dữ liệu của bạn', fileType: '' },
-        { title: 'Quản lý tài khoản', infomation: 'quản lý tài khoản', fileType: '' },
-    ]); // lưu trữ danh sách file từ server
-    const [searchTerm, setSearchTerm] = useState(''); // lưu từ khóa tìm kiếm
+function Search({ convertedFiles, authStatus }) {
+    const [file, setFile] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
-    // Sử dụng useEffect để cập nhật file khi convertedFiles thay đổi
+    // Sử dụng useEffect để cập nhật file khi convertedFiles hoặc authStatus thay đổi
     useEffect(() => {
-        setFile(convertedFiles);
-    }, [convertedFiles]);
+        if (authStatus === 'user' || authStatus === 'guest') {
+            setFile(convertedFiles);
+        } else {
+            setFile([]); // Đặt lại file khi đăng xuất (authStatus === null)
+        }
+    }, [convertedFiles, authStatus]);
 
-    // Hàm tải xuống file
     const handleDownload = (fileName) => {
         console.log(`Tải xuống file: ${fileName}`);
     };
 
-    // Hàm xóa file
     const handleDelete = (fileName) => {
         setFile((prevFiles) => prevFiles.filter(file => file.title !== fileName));
         console.log(`Đã xóa file: ${fileName}`);
@@ -34,8 +29,9 @@ function Search({ convertedFiles }) {
     // Lọc file theo từ khóa
     const filteredFiles = file.filter((val) =>
         (val.title && val.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (val.infomation && val.infomation.toLowerCase().includes(searchTerm.toLowerCase())) // Sửa 'information' thành 'infomation'
+        (val.information && val.information.toLowerCase().includes(searchTerm.toLowerCase()))
     );
+    console.log(convertedFiles)
 
     return (
         <div>
@@ -49,7 +45,7 @@ function Search({ convertedFiles }) {
                             type='text'
                             placeholder='Nhập nội dung bạn muốn tìm...'
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)} // Cập nhật searchTerm khi gõ
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                 </div>
@@ -66,7 +62,6 @@ function Search({ convertedFiles }) {
                                 <div className='download-action' onClick={() => handleDownload(val.title)}>
                                     <img src={downloadIcon} alt='download' />
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -77,6 +72,7 @@ function Search({ convertedFiles }) {
 }
 
 export default Search;
+
 
 
 

@@ -8,51 +8,85 @@ import Search from './search/Search';
 import UpdateFile from './update_file/UpdateFile';
 import ManageFile from './manage_file/ManageFile';
 import ManageAccount from './manage_account/ManageAccount';
+import BacktoLogin from './login/backtologin/BacktoLogin';
 
 function App() {
-  const [convertedFiles, setConvertedFiles] = useState([]); // Trạng thái lưu file đã chuyển đổi
-  const [fileManage, setFileManage] = useState([]); // Trạng thái lưu danh sách file quản lý
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Mặc định chưa đăng nhập
+  const [userFiles, setUserFiles] = useState([]);
+  const [guestFiles, setGuestFiles] = useState([]);
+  const [convertedFiles, setConvertedFiles] = useState([]);
+  const [fileManage, setFileManage] = useState([]);
+  const [authStatus, setAuthStatus] = useState(null); // null, 'user', or 'guest'
 
   const handleFileConvert = (file) => {
-    setConvertedFiles([...convertedFiles, file]); // Cập nhật danh sách file đã chuyển đổi
+    if (authStatus === 'user') {
+      setUserFiles([...userFiles, file]);
+    } else if (authStatus === 'guest') {
+      setGuestFiles([...guestFiles, file]);
+    }
   };
 
   const handleLogin = () => {
-    setIsAuthenticated(true); // Cập nhật trạng thái khi đăng nhập
-    localStorage.setItem('isLoggedIn', 'true'); // Lưu trạng thái đăng nhập
+    setAuthStatus('user');
+    localStorage.setItem('authStatus', 'user');
+  };
+
+  const handleGuestLogin = () => {
+    setAuthStatus('guest');
+    localStorage.setItem('authStatus', 'guest');
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false); // Cập nhật trạng thái khi đăng xuất
-    localStorage.removeItem('isLoggedIn'); // Xóa thông tin trạng thái đăng nhập
+    setAuthStatus(null);
+    localStorage.removeItem('authStatus');
+    setConvertedFiles([]); // Đặt lại danh sách file khi đăng xuất
   };
 
+
   const updateFiles = (newFiles) => {
-    setFileManage(newFiles); // Cập nhật danh sách file quản lý
+    setFileManage(newFiles);
   };
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem('isLoggedIn');
-    if (loggedIn) {
-      setIsAuthenticated(true);
+    setConvertedFiles(authStatus === 'user' ? userFiles : authStatus === 'guest' ? guestFiles : []);
+  }, [authStatus, userFiles, guestFiles]);
+
+  useEffect(() => {
+    const savedAuthStatus = localStorage.getItem('authStatus');
+    if (savedAuthStatus) {
+      setAuthStatus(savedAuthStatus);
     }
   }, []);
 
   return (
     <Router>
-      {isAuthenticated && <Header onLogout={handleLogout} />} {/* Truyền hàm đăng xuất cho Header */}
+      <Routes>
+        <Route path="/login" element={<Login onLogin={handleLogin} onGuestLogin={handleGuestLogin} />} />
+      </Routes>
+
+      {(authStatus === 'user' || authStatus === 'guest') && <Header onLogout={handleLogout} />}
       <div style={{ display: 'flex' }}>
-        {isAuthenticated && <Sidebar />}
+        {(authStatus === 'user' || authStatus === 'guest') && <Sidebar />}
         <div style={{ flex: 1, padding: '20px' }}>
           <Routes>
-            <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
-            <Route path="/home" element={isAuthenticated ? <Home onFileConvert={handleFileConvert} /> : <Navigate to="/login" />} />
-            <Route path="/search" element={isAuthenticated ? <Search convertedFiles={convertedFiles} /> : <Navigate to="/login" />} />
-            <Route path="/update-file" element={isAuthenticated ? <UpdateFile updateFiles={updateFiles} fileManage={fileManage} /> : <Navigate to="/login" />} />
-            <Route path="/manage-file" element={isAuthenticated ? <ManageFile fileManage={fileManage} /> : <Navigate to="/login" />} />
-            <Route path="/manage-account" element={isAuthenticated ? <ManageAccount /> : <Navigate to="/login" />} />
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="/home" element={<Home onFileConvert={handleFileConvert} />} />
+            <Route path="/search" element={<Search convertedFiles={convertedFiles} authStatus={authStatus} />} />
+
+            {authStatus === 'user' && (
+              <>
+                <Route path="/update-file" element={<UpdateFile updateFiles={updateFiles} fileManage={fileManage} />} />
+                <Route path="/manage-file" element={<ManageFile fileManage={fileManage} />} />
+                <Route path="/manage-account" element={<ManageAccount />} />
+              </>
+            )}
+            {authStatus === 'guest' && (
+              <>
+                <Route path="/update-file" element={<BacktoLogin onBackToLogin={handleLogout} />} />
+                <Route path="/manage-file" element={<BacktoLogin onBackToLogin={handleLogout} />} />
+                <Route path="/manage-account" element={<BacktoLogin onBackToLogin={handleLogout} />} />
+              </>
+            )}
+
+            <Route path="*" element={authStatus ? <Navigate to="/home" /> : <Navigate to="/login" />} />
           </Routes>
         </div>
       </div>
@@ -61,10 +95,6 @@ function App() {
 }
 
 export default App;
-
-
-
-
 
 
 
