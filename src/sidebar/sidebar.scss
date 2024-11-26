@@ -1,32 +1,34 @@
 .sidebar {
     height: 92vh;
     width: 250px;
-    border-right: 1px solid var(--primary-color);
+    min-width: 250px;
+    // border-right: 1px solid var(--primary-color);
 
     .sidebar-list {
         height: 100%;
         width: 100%;
+        min-width: 250px;
         padding: 0;
 
         .list-row {
+            width: 100%;
+            min-width: 250px;
+            /* Giữ nguyên độ rộng của từng hàng */
+            height: 60px;
+            list-style-type: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             a {
                 display: flex;
-                /* Sử dụng flex để căn chỉnh các phần tử bên trong */
                 align-items: center;
-                /* Căn giữa theo chiều dọc */
                 justify-content: flex-start;
-                /* Căn giữa theo chiều ngang */
                 height: 100%;
-                /* Đảm bảo anchor chiếm toàn bộ chiều cao của list-row */
                 width: 100%;
-                /* Đảm bảo anchor chiếm toàn bộ chiều rộng của list-row */
                 text-decoration: none;
-                /* Bỏ gạch chân của link */
                 color: inherit;
-                /* Đảm bảo màu chữ giống như màu mặc định */
                 padding: 0 10px;
-                /* Thêm một chút padding để đẹp hơn */
 
                 .sidebar-icon {
                     flex: 30%;
@@ -37,44 +39,75 @@
                 .sidebar-title {
                     flex: 70%;
                 }
-
-            }
-
-            width: 100%;
-            height: 60px;
-
-            list-style-type: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            .sidebar-link {
-                transition: background-color 0.2s ease;
-                /* Thời gian và kiểu chuyển tiếp */
             }
 
             .sidebar-link.active {
                 background-color: rgb(243, 240, 240);
-
-                /* Màu cho mục được chọn */
+                width: 100%;
             }
 
-        }
-
-        .list-row:hover {
-            background-color: rgb(246, 243, 243);
-
-
+            &:hover {
+                background-color: rgb(246, 243, 243);
+            }
         }
     }
-}
 
-.notify-dot {
-    width: 8px;
-    height: 8px;
-    background-color: red;
-    border-radius: 50%;
-    display: inline-block;
-    margin-left: 50px;
-    /* Khoảng cách giữa tiêu đề và chấm đỏ */
+    .notify-dot {
+        width: 8px;
+        height: 8px;
+        background-color: red;
+        border-radius: 50%;
+        display: inline-block;
+        margin-left: 50px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        width: 220px;
+
+        .sidebar-list .list-row a {
+            padding: 0 8px;
+            /* Điều chỉnh khoảng cách bên trong */
+
+            .sidebar-title {
+                font-size: 14px;
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        width: 180px;
+        /* Chiều rộng sidebar trên màn hình nhỏ hơn */
+
+        .sidebar-list .list-row {
+            min-width: 180px;
+            /* Đảm bảo mỗi hàng không co lại quá nhỏ */
+        }
+
+        .sidebar-list .list-row a .sidebar-title {
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        width: 160px;
+
+        .sidebar-list .list-row {
+            min-width: 160px;
+        }
+
+        .sidebar-list .list-row a {
+            padding: 0 6px;
+            /* Giảm khoảng cách bên trong */
+
+            .sidebar-icon {
+                flex: 25%;
+            }
+
+            .sidebar-title {
+                flex: 75%;
+                font-size: 10px;
+            }
+        }
+    }
 }

@@ -31,10 +31,10 @@ function Search({ convertedFiles, authStatus }) {
         (val.title && val.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (val.information && val.information.toLowerCase().includes(searchTerm.toLowerCase()))
     );
-    console.log(convertedFiles)
+
 
     return (
-        <div>
+        <div className='search' style={{ display: 'flex', flexDirection: 'column' }} >
             <div className='search-wrapper'>
                 <div className='search-typing'>
                     <div className='search-icon'>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import './index.css';
 import Home from './home/home';
 import Header from './header/header';
 import Login from './login/login';
@@ -9,6 +10,10 @@ import UpdateFile from './update_file/UpdateFile';
 import ManageFile from './manage_file/ManageFile';
 import ManageAccount from './manage_account/ManageAccount';
 import BacktoLogin from './login/backtologin/BacktoLogin';
+import Testgrid from './test/Testgrid';
+import 'font-awesome/css/font-awesome.min.css';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 function App() {
   const [userFiles, setUserFiles] = useState([]);
@@ -58,15 +63,17 @@ function App() {
   }, []);
 
   return (
+
+
     <Router>
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} onGuestLogin={handleGuestLogin} />} />
       </Routes>
 
       {(authStatus === 'user' || authStatus === 'guest') && <Header onLogout={handleLogout} />}
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', overflow: 'hidden' }}>
         {(authStatus === 'user' || authStatus === 'guest') && <Sidebar />}
-        <div style={{ flex: 1, padding: '20px' }}>
+        <div className="scrollable-container" style={{ flex: 1, borderLeft: '0.1px solid #61D6A9', position: 'relative' }}>
           <Routes>
             <Route path="/home" element={<Home onFileConvert={handleFileConvert} />} />
             <Route path="/search" element={<Search convertedFiles={convertedFiles} authStatus={authStatus} />} />
